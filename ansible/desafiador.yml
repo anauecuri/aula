@@ -1,0 +1,58 @@
+---
+- name: Desafio1
+  hosts: all
+  tasks:
+    - name: Parar NGINX
+      service:
+        name: nginx
+        state: stopped
+      ignore_errors: True
+#REMOVE UBUNTU
+    - name: Removendo NGINX - UBUNTU
+      apt:
+        name: nginx*
+        state: absent
+      when: ansible_distribution == "Ubuntu"
+#REMOVE CENTOS
+    - name: Removendo NGINX - CentOS
+      yum:
+        name: nginx*
+        state: absent
+      when: ansible_distribution == "CentOS"
+#INSTALA UBUNTU
+    - name: Instalando Servidor Web - Ubuntu
+      apt:
+        name: ['apache2','libapache2-mod-php7.0','php7.0']
+        state: present
+        update_cache: yes
+      when: ansible_distribution == 'Ubuntu'
+#INSTALA CENTOS
+    - name: Instalando Servidor Web - CentOS
+      yum:
+        name: ['httpd','php']
+        state: present
+      notify: httpd
+      when: ansible_distribution == 'CentOS'
+#ATIVA MODULO - UBUNTU
+    - name: Ativando Modulo PHP - Ubuntu
+      command: a2enmod php7.0
+      notify: apache
+      when: ansible_distribution == 'Ubuntu'
+#COPIA INDEX
+    - name: Copiando Index.php
+      copy:
+        src: /etc/ansible/index.php
+        dest: /var/www/html/index.php
+#GERENCIANDO SERVICOS
+  handlers:
+    - name: httpd
+      service:
+        name: httpd
+        state: restarted
+
+    - name: apache
+      service:
+        name: apache2
+        state: restarted
+ 
+

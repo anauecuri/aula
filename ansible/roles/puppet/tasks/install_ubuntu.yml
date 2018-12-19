@@ -1,0 +1,12 @@
+- name: Instalando repositorio 
+  apt:
+    deb: /root/puppet6-release-xenial.deb
+    state: present
+
+- name: Instalando o puppet_agent - ubuntu
+  apt:
+    name: puppet-agent
+    state: present
+    update_cache: yes
+
+ 

@@ -1,0 +1,12 @@
+- name: baixando repositorio - ubuntu
+  get_url:
+    url: https://apt.puppetlabs.com/puppet6-release-xenial.deb
+    dest: /root/
+  when: ansible_distribution == "Ubuntu"
+
+- name: baixando repositorio - centos
+  get_url:
+    url: https://yum.puppet.com/puppet6/puppet6-release-el-7.noarch.rpm
+    dest: /root/
+  when: ansible_distribution == "CentOS"
+
